@@ -1,0 +1,27 @@
+<section class="all-notes">
+    <h2>All Notes</h2>
+    <div class="row">
+        <% if (notes.length > 0) { %>
+            <% notes.forEach(note => { %>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= note.title %></h5>
+                            <p class="card-text"><%= note.content.substring(0, 100) %>...</p>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted">
+                                    <%= new Date(note.createdAt).toLocaleDateString() %>
+                                </small>
+                                <a href="/notes/<%= note._id %>" class="btn btn-sm btn-primary">View</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="col-12">
+                <div class="alert alert-info">No notes found</div>
+            </div>
+        <% } %>
+    </div>
+</section>

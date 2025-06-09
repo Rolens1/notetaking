@@ -1,0 +1,17 @@
+<header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="/" class="navbar-brand" style="color: <%= user.preferences.fontColor %>;">
+                    <i class="fas fa-thumbtack"></i> <%= user.name %>'s Billboard
+                </a>
+                <ul class="navbar-nav">
+                    <li><a href="/index" class="nav-link active">Home</a></li>
+                    <li><a href="/settings" class="nav-link">Settings</a></li>
+                    <li><a href="/logout" class="nav-link">Logout</a></li>
+                </ul>
+                <button class="navbar-toggler" id="navbarToggler" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>

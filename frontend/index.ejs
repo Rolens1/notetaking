@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.name %>'s Billboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/themes.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/billboard.css">
+</head>
+<body class="<%= user.preferences.theme === 'dark' ? 'dark-theme' : '' %>">
+
+    <%- include('partials/header', { user: user }) %>
+
+
+    <main class="container">
+        <div class="app-container">
+            <aside class="sidebar">
+                <div class="filters">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-notes" placeholder="Search notes...">
+                    </div>
+                    
+                    <div class="category-filter">
+                        <label for="category-select">Filter by:</label>
+                        <select id="category-select">
+                            <option value="all">All Categories</option>
+                            <% const uniqueCategories = [...new Set(notes.map(note => note.category))]; %>
+                            <% uniqueCategories.forEach(category => { %>
+                                <option value="<%= category %>"><%= category %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="new-note-btn" class="btn btn-primary" style="background-color: <%= user.preferences.noteBackground %>; color: <%= user.preferences.fontColor %>;">
+                    <i class="fas fa-plus"></i> Add a New Note
+                </button>
+                
+                <form class="note-form" id="note-form">
+                    <div class="form-group">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="content">Content</label>
+                        <textarea id="content" name="content" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="note-category">Category</label>
+                        <select id="note-category" name="category" required>
+                            <% uniqueCategories.forEach(category => { %>
+                                <option value="<%= category %>"><%= category %></option>
+                            <% }); %>
+                            <option value="new">+ Create New Category</option>
+                        </select>
+                        <input type="text" id="new-category-input" name="new_category_name" style="display: none;" placeholder="Enter new category">
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" style="background-color: <%= user.preferences.noteBackground %>; color: <%= user.preferences.fontColor %>;">Pin Note</button>
+                    </div>
+                </form>
+            </aside>
+
+            <section id="billboard" class="main-content">
+                <div class="notes-grid" id="all-notes">
+                    <% if (notes && notes.length > 0) { %>
+                        <% notes.forEach(note => { %>
+                            <div class="note-card" draggable="true" 
+                                 style="background-color: <%= user.preferences.noteBackground %>;" 
+                                 data-id="<%= note._id %>"
+                                 data-category="<%= note.category %>"
+                                 data-title="<%= note.title.toLowerCase() %>"
+                                 data-content="<%= note.content.toLowerCase() %>">
+                                
+                                <div class="note-actions">
+                                    <button class="edit-btn" data-id="<%= note._id %>"><i class="fas fa-edit"></i></button>
+                                    <button class="delete-btn" data-id="<%= note._id %>"><i class="fas fa-trash"></i></button>
+                                </div>
+                                
+                                <h3 style="color: <%= user.preferences.fontColor %>;"><%= note.title %></h3>
+                                
+                                <div style="color: <%= user.preferences.fontColor %>;">
+                                    <% if (locals.markdownToHtml) { %>
+                                        <%- markdownToHtml(note.content) %>
+                                    <% } else { %>
+                                        <%= note.content %>
+                                    <% } %>
+                                </div>
+                                
+                                <div class="note-meta">
+                                    <span class="category-tag"><%= note.category %></span> <span class="note-date"><%= new Date(note.createdAt).toLocaleDateString() %></span>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="no-notes">
+                            <p>Your billboard is empty. Click 'Add a New Note' to pin your thoughts!</p>
+                        </div>
+                    <% } %>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <script src="/javascript/script.js"></script>
+</body>
+</html>
