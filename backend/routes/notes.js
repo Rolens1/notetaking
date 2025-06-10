@@ -17,10 +17,10 @@ const authenticate = (req, res, next) => {
         req.user = { userId: 'testUser123' };
         return next();
     }
-    // Sinon, on utilise le vrai middleware de login
     return isLoggedIn(req, res, next);
 };
 
+// Function to get a single note 
 async function getNote(req, res, next) {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -30,12 +30,10 @@ async function getNote(req, res, next) {
             return res.status(400).render('error', { message: "Invalid note ID" });
         }
 
-        // console.log(req.user)
         const note = await Note.findOne({
             _id: req.params.id,
             owner: req.user.userId
         });
-        // console.log("NOte is ", note)
 
         if (!note) {
             if (req.accepts('json')) {
@@ -43,7 +41,6 @@ async function getNote(req, res, next) {
             }
             return res.status(404).render('error', { message: "Note not found" });
         }
-
         req.note = note;
         next();
     } catch (error) {
@@ -54,11 +51,9 @@ async function getNote(req, res, next) {
 // Route GET /notes 
 router.get('/notes/getall', authenticate, async (req, res, next) => {
     try {
-        // console.log("This is the user " + req.user.displayName)
         const notes = await Note.find({ owner: req.user.userId })
                               .sort({ createdAt: -1 })
                               .lean();
-        
         res.status(200).json({user: req.user, notes})
     } catch (error) {
         next(error);
@@ -69,13 +64,10 @@ router.get('/notes/getall', authenticate, async (req, res, next) => {
 router.post('/create/note', authenticate, async (req, res, next) => {
     try {
         const { title, content, category, new_category_name } = req.body;
-
         if (!title || !content) {
             return res.status(400).json({ error: "Title and content are required" });
         }
-
         let finalCategory;
-
         if (category === 'new') {
             // If user creates a new category, use the new name
             finalCategory = new_category_name ? new_category_name.trim() : 'Uncategorized';
@@ -83,7 +75,6 @@ router.post('/create/note', authenticate, async (req, res, next) => {
             // If user selects an existing category, use that value
             finalCategory = category;
         }
-
         const note = new Note({
             title,
             content,
@@ -94,12 +85,10 @@ router.post('/create/note', authenticate, async (req, res, next) => {
         const savedNote = await note.save();
         const renderedContent = sanitizeHtml(marked.parse(savedNote.content));
 
-
         const responseNote = {
             ...savedNote.toObject(),
             renderedContent: renderedContent
         };
-        
         // Send a success response with the complete new note data
         res.status(201).json({
             success: true,
@@ -111,11 +100,11 @@ router.post('/create/note', authenticate, async (req, res, next) => {
     }
 });
 
+// verify if note is for the logged in user and returns it
 router.get('/note/:id', authenticate, getNote, (req, res) => {
     if (req.accepts('json')) {
         return res.json(req.note);
     }
-    
     res.render('notes/view', {
         note: req.note,
         user: req.user,
@@ -127,16 +116,12 @@ router.get('/note/:id', authenticate, getNote, (req, res) => {
 router.post('/note/:id/edit', authenticate, getNote, async (req, res) => {
   try {
     const { title, content, category } = req.body;
-    // console.log("I received the link")
-    // console.log(req.body)
-    
     req.note.title = title;
     req.note.content = content;
     req.note.category = category;
     req.note.updatedAt = new Date();
-    
-    await req.note.save();
 
+    await req.note.save();
     res.json({ success: true, note: req.note });
   } catch (error) {
     res.status(500).json({ error: "Failed to update" });
@@ -145,10 +130,7 @@ router.post('/note/:id/edit', authenticate, getNote, async (req, res) => {
 
 router.post('/note/:id/delete', authenticate, getNote, async (req, res) => {
   try {
-    // console.log("I received the instruction to delete")
-    
     await req.note.deleteOne();
-
     res.json({ success: true, note: req.note });
   } catch (error) {
     res.status(500).json({ error: "Failed to update" });
@@ -158,12 +140,10 @@ router.post('/note/:id/delete', authenticate, getNote, async (req, res) => {
 // Route PUT /note/:id
 router.put('/note/:id', authenticate, getNote, async (req, res, next) => {
     try {
-        const { title, content, category } = req.body;
-        
+        const { title, content, category } = req.body; 
         if (!title || !content) {
             return res.status(400).json({ error: "Title and content are required" });
         }
-
         const updatedNote = await Note.findByIdAndUpdate(
             req.params.id,
             {
@@ -174,7 +154,6 @@ router.put('/note/:id', authenticate, getNote, async (req, res, next) => {
             },
             { new: true, runValidators: true }
         );
-
         res.status(200).json({
             success: true,
             message: "Note updated successfully",
@@ -203,25 +182,19 @@ router.use((err, req, res, next) => {
 // Route to save note position
 router.post('/note/:id/position', authenticate, getNote, async (req, res) => {
     try {
-
         if (!req.note) {
             return res.status(404).json({ message: 'Note not found or you do not have permission.' });
         }
-
         const {positionX, positionY} = req.body
-        
         // Update position and save
         req.note.positionX = positionX;
         req.note.positionY = positionY;
         await req.note.save();
-
         res.json({ success: true, message: 'Note position updated.' });
-
     } catch (error) {
         console.error('Error saving note position:', error);
         res.status(500).json({ message: 'Server error.' });
     }
 });
-
 
 module.exports = router;

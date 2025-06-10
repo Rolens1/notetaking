@@ -33,7 +33,6 @@ app.locals.markdownToHtml = (markDownContent) => {
 
 
 app.set('view engine', 'ejs');
-// if you delete this line, it will default to 'views' folder
 app.set('views', path.join(__dirname, '../frontend')); 
 
 app.use(express.static(path.join(__dirname, '../public')));

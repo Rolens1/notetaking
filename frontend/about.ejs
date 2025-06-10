@@ -10,77 +10,58 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
     <link rel="stylesheet" href="/css/themes.css">
     <link rel="stylesheet" href="/css/index.css">
-    <link rel="stylesheet" href="/css/billboard.css">
-
+    <link rel="stylesheet" href="/css/about.css">
 </head>
 <body class="<%= user.preferences.theme === 'dark' ? 'dark-theme' : '' %>">
 
     <%- include('partials/header', { user: user }) %>
 
-    <main class="container" style="margin-top: 30px;">
-        <div class="about-page-content">
-            
-            <section class="about-section">
-                <div class="section-title">
-                    <i class="fas fa-thumbtack"></i>
-                    <h2>About My Billboard</h2>
+    <section class="about-hero">
+        <div class="container">
+            <h1>An elegant space for your ideas.</h1>
+            <p class="subtitle">Billboard is more than just a note-taking app; it's a clean, organized, and beautiful environment designed to help you focus.</p>
+        </div>
+    </section>
+
+    <main class="about-main-content">
+        <div class="container">
+
+            <section class="about-feature-section">
+                <div class="feature-text">
+                    <h2>Inspired by Simplicity</h2>
+                    <p>The original idea was to recreate the satisfying feeling of a physical corkboard. A simple place to pin thoughts, organize them visually with drag-and-drop, and customize the look and feel to make the space truly your own.</p>
                 </div>
-                <p>
-                    Billboard is a minimalist and elegant note-taking application designed to capture your thoughts, ideas, and tasks in a simple, intuitive way. Inspired by the classic corkboard, it provides a clean space to pin your digital notes, organize them by category, and customize your workspace to your liking.
-                </p>
+                <div class="feature-image">
+                    <img src="/img/billboard-screenshot.png" alt="Billboard App Screenshot">
+                </div>
             </section>
 
-            <div class="about-grid">
-                <section class="about-section">
-                    <div class="section-title">
-                        <i class="fas fa-cogs"></i>
-                        <h2>Tech Stack</h2>
-                    </div>
-                    <p>
-                        This application is built with modern web technologies, showcasing a full-stack development approach.
-                    </p>
-                    <div class="tech-stack-list">
-                        <div class="tech-item" title="Node.js">
-                            <i class="devicon-nodejs-plain-wordmark"></i>
-                            <span>Node.js</span>
-                        </div>
-                        <div class="tech-item" title="Express.js">
-                            <i class="devicon-express-original-wordmark"></i>
-                            <span>Express</span>
-                        </div>
-                        <div class="tech-item" title="MongoDB">
-                            <i class="devicon-mongodb-plain-wordmark"></i>
-                            <span>MongoDB</span>
-                        </div>
-                        <div class="tech-item" title="JavaScript (ES6+)">
-                            <i class="devicon-javascript-plain"></i>
-                            <span>JavaScript</span>
-                        </div>
-                        <div class="tech-item" title="EJS">
-                            <i class="fas fa-file-code"></i>
-                            <span>EJS</span>
-                        </div>
-                        <div class="tech-item" title="CSS3">
-                            <i class="devicon-css3-plain-wordmark"></i>
-                            <span>CSS3</span>
-                        </div>
-                    </div>
-                </section>
+            <section class="tech-stack-showcase">
+                <h2>Built With Modern & Robust Technologies</h2>
+                <div class="tech-stack-list">
+                    <div class="tech-item" title="Node.js"><i class="devicon-nodejs-plain-wordmark"></i></div>
+                    <div class="tech-item" title="Express.js"><i class="devicon-express-original-wordmark"></i></div>
+                    <div class="tech-item" title="MongoDB"><i class="devicon-mongodb-plain-wordmark"></i></div>
+                    <div class="tech-item" title="JavaScript"><i class="devicon-javascript-plain"></i></div>
+                    <div class="tech-item" title="EJS"><span class="tech-text">EJS</span></div>
+                    <div class="tech-item" title="CSS3"><i class="devicon-css3-plain-wordmark"></i></div>
+                    <div class="tech-item" title="HTML5"><i class="devicon-html5-plain-wordmark"></i></div>
+                </div>
+            </section>
 
-                <section class="about-section">
-                    <div class="section-title">
-                        <i class="fas fa-user-circle"></i>
-                        <h2>About the Creator</h2>
-                    </div>
-                    <p>
-                        My name is Pierre, a passionate web developer based in Trois-Rivières, QC. I enjoy building useful and beautiful applications from scratch. This project is a demonstration of my skills in back-end logic, database management, and creating interactive user interfaces.
-                    </p>
+            <section class="about-feature-section reverse">
+                <div class="feature-text">
+                    <h2>About the Creator</h2>
+                    <p>My name is Pierre, a passionate web developer from Trois-Rivières, QC. I enjoy building useful and beautiful applications from scratch. This project is a demonstration of my skills in back-end logic, database management, and creating interactive user interfaces.</p>
                     <div class="social-links-about">
-                        <a href="#" class="btn btn-primary"><i class="fab fa-github"></i> GitHub</a>
-                        <a href="#" class="btn btn-secondary"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                        <a href="https://github.com/Rolens1" class="btn btn-primary" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i> GitHub</a>
+                        <a href="https://www.linkedin.com/in/pierre-cheridor-38754a1b2/" class="btn btn-secondary" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i> LinkedIn</a>
                     </div>
-                </section>
-            </div>
+                </div>
+                <div class="feature-image">
+                    <img src="/img/pierre-photo.jpg" alt="Pierre Cheridor">
+                </div>
+            </section>
 
         </div>
     </main>
