@@ -17,6 +17,10 @@ mongoose.connect(process.env.MONGODB_URI)
 const {marked} = require("marked")
 const sanitizeHtml = require("sanitize-html")
 
+// active when I ren the test so I deactivate isLoggedIn
+const isTestMode = process.env.NODE_ENV === "test"
+const authenticate = isTestMode ? (req, res, next) => next() : isLoggedIn;
+
 
 app.locals.markdownToHtml = (markDownContent) => {
   if (!markDownContent){
@@ -64,11 +68,11 @@ app.get('/', (req, res) => {
   res.render('login', { user: req.user });
 });
 
-app.get('/dashboard', isLoggedIn, (req, res) => {
+app.get('/dashboard', authenticate, (req, res) => {
   res.render('dashboard', { user: req.user });
 });
 
-app.get('/index', isLoggedIn, async (req, res) => {
+app.get('/index', authenticate, async (req, res) => {
   const notes = await Note.find({ owner: req.user.userId })
                           .sort({ createdAt: -1}).lean()
   const userProfile = await UserProfile.findOne({ userId: req.user.userId })
@@ -83,7 +87,7 @@ app.get('/index', isLoggedIn, async (req, res) => {
   });
 });
 
-app.get('/settings', isLoggedIn, async (req, res) => {
+app.get('/settings', authenticate, async (req, res) => {
     const userProfile = await UserProfile.findOne({ userId: req.user.userId })
     res.render('settings', {
         user: req.user,
@@ -91,7 +95,7 @@ app.get('/settings', isLoggedIn, async (req, res) => {
     });
 });
 
-app.post('/settings', isLoggedIn, async (req, res) => {
+app.post('/settings', authenticate, async (req, res) => {
     const { name, email, noteBackground, fontColor, fontSize, fontFamily, theme } = req.body;
     const userId = req.user.userId
 
@@ -115,17 +119,27 @@ app.post('/settings', isLoggedIn, async (req, res) => {
     }
 });
 
+app.get('/about', authenticate, (req, res) => {
+  console.log(req.user)
+    res.render('about', {
+        user: req.user
+    });
+});
+
 app.get('/session', (req, res) => {
-  console.log(req.session); // Affiche la session
-  console.log(req.user); // Doit être défini si connecté
+  console.log(req.session);
+  console.log(req.user); 
   res.json({ session: req.session, user: req.user });
 });
 
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Visit http://localhost:${PORT} to see the app`);
-});
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
 
+// I export it to use it for the tests
+module.exports = app;
 // module.exports = {isLoggedIn}

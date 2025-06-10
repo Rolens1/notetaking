@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Billboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+    <link rel="stylesheet" href="/css/themes.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/billboard.css">
+
+</head>
+<body class="<%= user.preferences.theme === 'dark' ? 'dark-theme' : '' %>">
+
+    <%- include('partials/header', { user: user }) %>
+
+    <main class="container" style="margin-top: 30px;">
+        <div class="about-page-content">
+            
+            <section class="about-section">
+                <div class="section-title">
+                    <i class="fas fa-thumbtack"></i>
+                    <h2>About My Billboard</h2>
+                </div>
+                <p>
+                    Billboard is a minimalist and elegant note-taking application designed to capture your thoughts, ideas, and tasks in a simple, intuitive way. Inspired by the classic corkboard, it provides a clean space to pin your digital notes, organize them by category, and customize your workspace to your liking.
+                </p>
+            </section>
+
+            <div class="about-grid">
+                <section class="about-section">
+                    <div class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        <h2>Tech Stack</h2>
+                    </div>
+                    <p>
+                        This application is built with modern web technologies, showcasing a full-stack development approach.
+                    </p>
+                    <div class="tech-stack-list">
+                        <div class="tech-item" title="Node.js">
+                            <i class="devicon-nodejs-plain-wordmark"></i>
+                            <span>Node.js</span>
+                        </div>
+                        <div class="tech-item" title="Express.js">
+                            <i class="devicon-express-original-wordmark"></i>
+                            <span>Express</span>
+                        </div>
+                        <div class="tech-item" title="MongoDB">
+                            <i class="devicon-mongodb-plain-wordmark"></i>
+                            <span>MongoDB</span>
+                        </div>
+                        <div class="tech-item" title="JavaScript (ES6+)">
+                            <i class="devicon-javascript-plain"></i>
+                            <span>JavaScript</span>
+                        </div>
+                        <div class="tech-item" title="EJS">
+                            <i class="fas fa-file-code"></i>
+                            <span>EJS</span>
+                        </div>
+                        <div class="tech-item" title="CSS3">
+                            <i class="devicon-css3-plain-wordmark"></i>
+                            <span>CSS3</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="about-section">
+                    <div class="section-title">
+                        <i class="fas fa-user-circle"></i>
+                        <h2>About the Creator</h2>
+                    </div>
+                    <p>
+                        My name is Pierre, a passionate web developer based in Trois-Rivières, QC. I enjoy building useful and beautiful applications from scratch. This project is a demonstration of my skills in back-end logic, database management, and creating interactive user interfaces.
+                    </p>
+                    <div class="social-links-about">
+                        <a href="#" class="btn btn-primary"><i class="fab fa-github"></i> GitHub</a>
+                        <a href="#" class="btn btn-secondary"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <script src="/javascript/script.js"></script>
+</body>
+</html>

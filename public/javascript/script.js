@@ -222,6 +222,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 draggedNote.style.position = 'absolute';
                 draggedNote.style.left = `${newX}px`;
                 draggedNote.style.top = `${newY}px`;
+
+                const noteId = draggedNote.dataset.id;
+                const positionData = {
+                    positionX: `${newX}px`,
+                    positionY: `${newY}px`
+                };
+                fetch(`/api/note/${noteId}/position`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(positionData),
+                    credentials: 'include'
+                }).then(response => {
+                    if (!response.ok) console.error('Failed to save note position.');
+                }).catch(error => console.error('Error:', error));
             }
         });
     }
@@ -237,6 +251,25 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.toggle('dark-theme', themeToggle.checked);
 
             themeValueInput.value = newTheme;
+        });
+
+
+    }
+
+    const animatedSections = document.querySelectorAll('.about-section');
+    if (animatedSections.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+             threshold: 0.1
+        });
+        animatedSections.forEach(section => {
+            observer.observe(section);
         });
     }
 });

@@ -10,6 +10,16 @@ mongoose.connect(process.env.MONGODB_URI)
 const { marked } = require('marked');
 const sanitizeHtml = require('sanitize-html');
 
+// active when I ren the test so I deactivate isLoggedIn
+const isTestMode = process.env.NODE_ENV === "test"
+const authenticate = (req, res, next) => {
+    if (isTestMode) {
+        req.user = { userId: 'testUser123' };
+        return next();
+    }
+    // Sinon, on utilise le vrai middleware de login
+    return isLoggedIn(req, res, next);
+};
 
 async function getNote(req, res, next) {
     try {
@@ -42,7 +52,7 @@ async function getNote(req, res, next) {
 }
 
 // Route GET /notes 
-router.get('/notes/getall', isLoggedIn, async (req, res, next) => {
+router.get('/notes/getall', authenticate, async (req, res, next) => {
     try {
         // console.log("This is the user " + req.user.displayName)
         const notes = await Note.find({ owner: req.user.userId })
@@ -56,7 +66,7 @@ router.get('/notes/getall', isLoggedIn, async (req, res, next) => {
 });
 
 // Route POST /create/note
-router.post('/create/note', isLoggedIn, async (req, res, next) => {
+router.post('/create/note', authenticate, async (req, res, next) => {
     try {
         const { title, content, category, new_category_name } = req.body;
 
@@ -101,7 +111,7 @@ router.post('/create/note', isLoggedIn, async (req, res, next) => {
     }
 });
 
-router.get('/note/:id', isLoggedIn, getNote, (req, res) => {
+router.get('/note/:id', authenticate, getNote, (req, res) => {
     if (req.accepts('json')) {
         return res.json(req.note);
     }
@@ -113,8 +123,8 @@ router.get('/note/:id', isLoggedIn, getNote, (req, res) => {
     });
 });
 
-// Route GET /note/:id/edit pour le rendu HTML
-router.post('/note/:id/edit', isLoggedIn, getNote, async (req, res) => {
+// Route GET /note/:id/edit
+router.post('/note/:id/edit', authenticate, getNote, async (req, res) => {
   try {
     const { title, content, category } = req.body;
     // console.log("I received the link")
@@ -133,7 +143,7 @@ router.post('/note/:id/edit', isLoggedIn, getNote, async (req, res) => {
   }
 });
 
-router.post('/note/:id/delete', isLoggedIn, getNote, async (req, res) => {
+router.post('/note/:id/delete', authenticate, getNote, async (req, res) => {
   try {
     // console.log("I received the instruction to delete")
     
@@ -145,8 +155,8 @@ router.post('/note/:id/delete', isLoggedIn, getNote, async (req, res) => {
   }
 });
 
-// Route PUT /note/:id optimisée
-router.put('/note/:id', isLoggedIn, getNote, async (req, res, next) => {
+// Route PUT /note/:id
+router.put('/note/:id', authenticate, getNote, async (req, res, next) => {
     try {
         const { title, content, category } = req.body;
         
@@ -190,26 +200,26 @@ router.use((err, req, res, next) => {
     res.status(statusCode).json(response);
 });
 
-router.post('/preferences/theme', isLoggedIn, async (req, res) => {
+// Route to save note position
+router.post('/note/:id/position', authenticate, getNote, async (req, res) => {
     try {
-        const { theme } = req.body;
 
-        // Basic validation
-        if (theme !== 'light' && theme !== 'dark') {
-            return res.status(400).json({ message: 'Invalid theme value' });
+        if (!req.note) {
+            return res.status(404).json({ message: 'Note not found or you do not have permission.' });
         }
-        console.log(req.user)
 
-        // Find user and update only the theme preference
-        await userProfile.findByIdAndUpdate(req.user._id, {
-            $set: { 'preferences.theme': theme }
-        });
+        const {positionX, positionY} = req.body
+        
+        // Update position and save
+        req.note.positionX = positionX;
+        req.note.positionY = positionY;
+        await req.note.save();
 
-        res.json({ success: true, message: `Theme updated to ${theme}` });
+        res.json({ success: true, message: 'Note position updated.' });
 
     } catch (error) {
-        console.error('Error saving theme:', error);
-        res.status(500).json({ message: 'Server error while saving theme preference' });
+        console.error('Error saving note position:', error);
+        res.status(500).json({ message: 'Server error.' });
     }
 });
 

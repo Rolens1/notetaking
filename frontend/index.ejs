@@ -69,14 +69,25 @@
                 <div class="notes-grid" id="all-notes">
                     <% if (notes && notes.length > 0) { %>
                         <% notes.forEach(note => { %>
+                            <% 
+                                // On prépare la chaîne de caractères pour les styles.
+                                // Elle contient toujours la couleur de fond préférée de l'utilisateur.
+                                let style_attr = `background-color: ${user.preferences.noteBackground};`;
+
+                                // SI la note a une position X et Y enregistrée...
+                                if (note.positionX && note.positionY) {
+                                    // ...on ajoute les styles pour la positionner de manière absolue.
+                                    style_attr += ` position: absolute; left: ${note.positionX}; top: ${note.positionY};`;
+                                }
+                            %>
+
                             <div class="note-card" draggable="true" 
-                                 style="background-color: <%= user.preferences.noteBackground %>;" 
-                                 data-id="<%= note._id %>"
-                                 data-category="<%= note.category %>"
-                                 data-title="<%= note.title.toLowerCase() %>"
-                                 data-content="<%= note.content.toLowerCase() %>">
-                                
-                                <div class="note-actions">
+                                style="<%= style_attr %>" 
+                                data-id="<%= note._id %>"
+                                data-category="<%= note.category %>"
+                                data-title="<%= note.title.toLowerCase() %>"
+                                data-content="<%= note.content.toLowerCase() %>">
+                            <div class="note-actions">
                                     <button class="edit-btn" data-id="<%= note._id %>"><i class="fas fa-edit"></i></button>
                                     <button class="delete-btn" data-id="<%= note._id %>"><i class="fas fa-trash"></i></button>
                                 </div>
@@ -87,12 +98,13 @@
                                     <% if (locals.markdownToHtml) { %>
                                         <%- markdownToHtml(note.content) %>
                                     <% } else { %>
-                                        <%= note.content %>
+                                        <%= note.content.replace(/\n/g, '<br>') %>
                                     <% } %>
                                 </div>
                                 
                                 <div class="note-meta">
-                                    <span class="category-tag"><%= note.category %></span> <span class="note-date"><%= new Date(note.createdAt).toLocaleDateString() %></span>
+                                    <span class="category-tag"><%= note.category %></span> 
+                                    <span class="note-date"><%= new Date(note.createdAt).toLocaleDateString('en-US', {day: 'numeric', month: 'short', year: 'numeric'}) %></span>
                                 </div>
                             </div>
                         <% }) %>
