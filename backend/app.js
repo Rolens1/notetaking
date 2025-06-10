@@ -120,15 +120,39 @@ app.post('/settings', authenticate, async (req, res) => {
 });
 
 app.get('/about', authenticate, (req, res) => {
-  console.log(req.user)
     res.render('about', {
         user: req.user
     });
 });
 
+app.get('/stats', authenticate, async (req, res) => {
+    try {
+      const totalNotes = await Note.countDocuments({ owner: req.user.userId})
+
+      const categoryCounts = await Note.aggregate([
+        { $match: { owner: req.user.userId } },
+        { $group: { _id: '$category', count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ]);
+
+      const recentNotes = await Note.find({ owner: req.user.id })
+        .sort({ createdAt: -1 })
+        .limit(5)
+
+      res.render('stats', {
+        user: req.user,
+        totalNotes,
+        categoryCounts,
+        recentNotes
+    });
+
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+      res.status(500).send("Error fetching stats.");
+    }
+});
+
 app.get('/session', (req, res) => {
-  console.log(req.session);
-  console.log(req.user); 
   res.json({ session: req.session, user: req.user });
 });
 

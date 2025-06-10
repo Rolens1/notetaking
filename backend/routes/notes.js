@@ -223,4 +223,5 @@ router.post('/note/:id/position', authenticate, getNote, async (req, res) => {
     }
 });
 
+
 module.exports = router;

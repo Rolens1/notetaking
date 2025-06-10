@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= user.name %> - Settings</title>
+    <title><%= user.name || user.displayName %> - Settings</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -13,22 +13,7 @@
 </head>
 <body class="<%= userProfile.preferences.theme === 'dark' ? 'dark-theme' : '' %>">
 
-    <header>
-        <div class="container">
-            <nav class="navbar">
-                <a href="/index" class="navbar-brand" style="color: <%= userProfile.preferences.fontColor %>;">
-                    <i class="fas fa-book-open"></i> <%= user.displayName %>'s Notes
-                </a>
-                <ul class="navbar-nav">
-                    <li><a href="/index" class="nav-link">Home</a></li>
-                    <li><a href="/settings" class="nav-link active">Settings</a></li> <li><a href="/logout" class="nav-link">Logout</a></li>
-                </ul>
-                <button class="navbar-toggler" id="navbarToggler" aria-label="Toggle navigation">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </nav>
-        </div>
-    </header>
+    <%- include('partials/header', { user: user }) %>
 
     <main class="container" style="margin-top: 30px;">
         <div class="settings-form">

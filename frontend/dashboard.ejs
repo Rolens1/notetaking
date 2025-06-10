@@ -1,35 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Express Auth Demo</title>
-  <link rel="stylesheet" href="/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to your Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/themes.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
 </head>
-<body>
-  <div class="container">
-    <h1>Dashboard</h1>
-    <div class="dashboard-content">
-      <% if (user) { %>
-        <div class="user-profile">
-          <% if (user.photo) { %>
-            <img src="<%= user.photo %>" alt="Profile Picture" class="profile-pic">
-          <% } %>
-          <h2>Welcome, <%= user.displayName %>!</h2>
-          <p>Email: <%= user.email %></p>
-          <p>Google ID: <%= user.userId %> + Hello</p>
+<body class="<%= user.preferences.theme === 'dark' ? 'dark-theme' : '' %>">
+
+    <%- include('partials/header', { user: user }) %>
+
+    <main class="container">
+        <div class="welcome-header">
+            <h1>Welcome to Billboard, <%= user.name || user.displayName %>!</h1>
+            <p>Your new space to capture ideas. Here are a few things you can do to get started.</p>
         </div>
-        <div class="auth-info">
-          <h3>Authentication Success!</h3>
-          <p>You've successfully authenticated with Google OAuth.</p>
-          <p>In a real application, you would now have access to protected resources.</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fab fa-markdown"></i>
+                </div>
+                <h3>Write with Markdown</h3>
+                <p>Format your notes with headings, lists, bold, italics, and more using simple Markdown syntax.</p>
+                <pre><code># My Title\n**Bold text**\n- A list item</code></pre>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-hand-paper"></i>
+                </div>
+                <h3>Organize Visually</h3>
+                <p>Arrange your notes freely on the billboard. Drag and drop them to create the layout that works for you. The position is saved automatically.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <h3>Make It Yours</h3>
+                <p>Visit the settings page to change your note colors, and switch between the light and dark themes to match your preference.</p>
+            </div>
         </div>
-        <a href="/logout" class="logout-btn">Logout</a>
-      <% } else { %>
-        <p>You need to login to view this page.</p>
-        <a href="/" class="login-link">Go to Login</a>
-      <% } %>
-    </div>
-  </div>
+
+        <div class="main-cta-container">
+            <a href="/index" class="btn btn-primary btn-launch">
+                <i class="fas fa-rocket"></i> Let's Get Started!
+            </a>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <script src="/javascript/script.js"></script>
 </body>
 </html>

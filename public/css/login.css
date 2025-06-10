@@ -1,0 +1,208 @@
+/* Login Page Styles */
+
+body, html {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
+
+
+/* Showcase Panel (Left Side) */
+
+.login-showcase {
+    background: linear-gradient(45deg, var(--secondary-accent), var(--primary-accent));
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.showcase-content {
+    max-width: 450px;
+}
+
+.showcase-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    opacity: 0.8;
+}
+
+.login-showcase h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.login-showcase p {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    margin-bottom: 30px;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+
+.features-list i {
+    color: #a7f3d0;
+}
+
+
+/* Form Panel (Right Side) */
+
+.login-form-wrapper {
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-box h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.auth-box p {
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+.auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 50px;
+    padding: 0 20px;
+    border-radius: var(--border-radius-sm, 6px);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.btn-social.google {
+    background-color: var(--card-background);
+    color: var(--text-primary);
+}
+.btn-social.google:hover {
+    border-color: #4285F4;
+    box-shadow: 0 2px 10px rgba(66, 133, 244, 0.2);
+}
+.btn-social.google img {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-social.github {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+.btn-social.github:hover {
+    background-color: #000;
+}
+.btn-social.github i {
+    font-size: 1.5rem;
+}
+
+.user-info {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md, 12px);
+}
+.dashboard-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--primary-accent);
+}
+
+.login-footer {
+    position: absolute;
+    bottom: 20px;
+    text-align: center;
+    width: 100%;
+    left: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .login-container {
+        grid-template-columns: 1fr;
+    }
+    /* On mobile, the showcase panel is on top */
+    .login-showcase {
+        min-height: 50vh;
+    }
+    .login-form-wrapper {
+        min-height: 50vh;
+    }
+    .login-footer {
+        position: relative;
+        margin-top: 40px;
+    }
+}
+@media (max-width: 768px) {
+    .login-showcase {
+        padding: 25px;
+        min-height: unset;
+    }
+    .login-form-wrapper {
+        padding: 25px;
+        min-height: unset;
+    }
+    .login-showcase h1 {
+        font-size: 2.2rem;
+    }
+}

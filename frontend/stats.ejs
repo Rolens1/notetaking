@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Stats</title>
+    <link rel="stylesheet" href="/css/themes.css">
+    <link rel="stylesheet" href="/css/index.css">
+    <style>
+        /* Simple styles for the stats page */
+        .stats-container { max-width: 800px; margin: 40px auto; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .stat-card { background-color: var(--card-background); padding: 25px; border-radius: var(--border-radius-md); box-shadow: 0 4px 15px var(--shadow-color); }
+        .stat-card h3 { margin-top: 0; color: var(--primary-accent); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .stat-card .total-count { font-size: 3rem; font-weight: 700; text-align: center; }
+        .stats-list { list-style: none; padding: 0; }
+        .stats-list li { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color); }
+        .stats-list li:last-child { border-bottom: none; }
+        .stats-list .count { font-weight: 600; }
+    </style>
+</head>
+<body class="<%= user.preferences.theme === 'dark' ? 'dark-theme' : '' %>">
+
+    <%- include('partials/header', { user: user }) %>
+
+    <div class="stats-container">
+        <h1>Your Activity Stats</h1>
+        <p>Here is a summary of your notes on Billboard.</p>
+
+        <div class="stats-grid" style="margin-top: 30px;">
+            
+            <div class="stat-card">
+                <h3>Total Notes</h3>
+                <p class="total-count"><%= totalNotes %></p>
+            </div>
+
+            <div class="stat-card">
+                <h3>Notes per Category</h3>
+                <% if (categoryCounts.length > 0) { %>
+                    <ul class="stats-list">
+                        <% categoryCounts.forEach(category => { %>
+                            <li>
+                                <span><%= category._id %></span>
+                                <span class="count"><%= category.count %></span>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } else { %>
+                    <p>No categories found.</p>
+                <% } %>
+            </div>
+
+        </div>
+
+        <div class="stat-card" style="margin-top: 30px;">
+            <h3>Recently Created Notes</h3>
+            <% if (recentNotes.length > 0) { %>
+                <ul class="stats-list">
+                    <% recentNotes.forEach(note => { %>
+                        <li>
+                            <span><%= note.title %></span>
+                            <span class="note-date"><%= new Date(note.createdAt).toLocaleDateString('en-US', {day: 'numeric', month: 'short'}) %></span>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No recent notes.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+</body>
+</html>

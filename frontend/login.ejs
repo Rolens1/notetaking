@@ -1,38 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Express Auth Demo</title>
-  <link rel="stylesheet" href="/styles.css">
-</head>
-<body>
-  <div class="container">
-    <h1>Express Authentication Demo</h1>
-    <div class="auth-box">
-      <h2>Login with OAuth</h2>
-      <p>This demo shows how to implement Google OAuth authentication with PassportJS.</p>
-      
-      <div class="auth-buttons">
-        <a href="/auth/google" class="google-btn">
-          <img src="/google-logo.png" alt="Google Logo">
-          Login with Google
-        </a>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Billboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/themes.css">
+    <link rel="stylesheet" href="/css/login.css"> </head>
+<body class="<%= locals.user && user.preferences.theme === 'dark' ? 'dark-theme' : '' %>">
 
-        <a href="/auth/twitter" class="google-btn">
-          <img src="/twitter-logo.png" alt="Twitter Logo">
-          Login with Twitter
-        </a>
-      </div>
-      
-      
-      <% if (user) { %>
-        <div class="user-info">
-          <p>You're already logged in as: <%= user.displayName %></p>
-          <a href="/dashboard" class="dashboard-link">Go to Dashboard</a>
+    <div class="login-container">
+        
+        <div class="login-showcase">
+            <div class="showcase-content">
+                <a href="/" class="showcase-brand"><i class="fas fa-thumbtack"></i> Billboard</a>
+                <h1>Pin your thoughts, brilliantly.</h1>
+                <p>The minimalist note-taking app that helps you focus on what truly matters.</p>
+                <ul class="features-list">
+                    <li><i class="fas fa-check-circle"></i> Organize with categories and colors</li>
+                    <li><i class="fas fa-check-circle"></i> Write in Markdown with live preview</li>
+                    <li><i class="fas fa-check-circle"></i> Drag & drop your notes freely</li>
+                    <li><i class="fas fa-check-circle"></i> Light & Dark mode available</li>
+                </ul>
+            </div>
         </div>
-      <% } %>
+
+        <div class="login-form-wrapper">
+            <div class="auth-box">
+                <h2>Get Started</h2>
+                <p>Choose your preferred provider to log in or sign up.</p>
+                
+                <div class="auth-buttons">
+                    <a href="/auth/google" class="btn-social google">
+                        <img src="https://www.figma.com/community/resource/abed920a-e3d0-48eb-bfe1-bf263fc25bae/thumbnail" alt="Google Logo"> <span>Continue with Google</span>
+                    </a>
+                    <a href="/auth/github" class="btn-social github">
+                        <i class="fab fa-github"></i>
+                        <span>Continue with GitHub</span>
+                    </a>
+                </div>
+                
+                <% if (locals.user) { %>
+                    <div class="user-info">
+                        <p>Welcome back, <strong><%= user.name || user.displayName %></strong>!</p>
+                        <a href="/index" class="dashboard-link">Go to your Billboard &rarr;</a>
+                    </div>
+                <% } %>
+            </div>
+            <div class="login-footer">
+                <p>&copy; <%= new Date().getFullYear() %> Pierre. A personal portfolio project.</p>
+            </div>
+        </div>
+
     </div>
-  </div>
+
 </body>
 </html>

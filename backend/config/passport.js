@@ -1,8 +1,8 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GitHubStrategy = require('passport-github2').Strategy;
 const User = require('../models/user')
 const UserProfile = require('../models/userProfile')
-const TwitterStrategy = require("passport-twitter").Strategy
 
 
 passport.use(new GoogleStrategy({
@@ -35,24 +35,49 @@ passport.use(new GoogleStrategy({
 
       await user.save()
     }
-    done(null, user); // ← Important : fournissez l'utilisateur
+    done(null, user);
   }
 ));
 
-passport.use(new TwitterStrategy({
-  consumerKey: process.env.TWITTER_CONSUMER_KEY,
-  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-  callbackURL: "oob",
-  includeEmail: true // request email from Twitter if it is available
-},
-  function(token, tokenSecret, profile, done) {
-    if (profile.emails[0]){
-      profile.email = profile.emails[0].value
+passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "/auth/github/callback",
+    scope: ['user:email']
+  },
+  async function(accessToken, refreshToken, profile, done) {
+    console.log(profile);
+
+    try {
+        const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+
+        const queryConditions = [{ userId: profile.id }];
+        if (email) {
+            queryConditions.push({ email: email });
+        }
+
+        let user = await UserProfile.findOne({ $or: queryConditions });
+
+        if (!user) {
+            user = new UserProfile({
+                userId: profile.id, 
+                displayName: profile.displayName || profile.username,
+                name: profile.displayName || profile.username,
+                email: email
+            });
+            await user.save();
+        }
+        
+        // 3. On passe l'utilisateur à Passport pour la session
+        return done(null, user);
+
+    } catch (err) {
+        return done(err);
     }
-    // Mongo stuff
-    return done(null, profile)
   }
-))
+));
+
+
 
 // To match the user with sessions
 passport.serializeUser((user, done) => {
